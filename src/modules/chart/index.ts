@@ -1,4 +1,6 @@
+import * as fs from 'fs';
 import autobind from 'autobind-decorator';
+import * as chalk from 'chalk';
 import Module from '@/module';
 import serifs from '@/serifs';
 import Message from '@/message';
@@ -12,6 +14,16 @@ export default class extends Module {
 	@autobind
 	public install() {
 		if (config.chartEnabled === false) return {};
+		try {
+			fs.realpathSync("./font.ttf");
+		} catch (e) {
+			if (e.code === "ENOENT") {
+				this.log(chalk.yellow("font.ttf not found! chart feature will be disabled."));
+				return {};
+			} else {
+				throw e;
+			}
+		}
 
 		this.post();
 		setInterval(this.post, 1000 * 60 * 3);
