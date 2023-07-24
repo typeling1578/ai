@@ -1,5 +1,8 @@
+import * as fs from 'fs';
 import autobind from 'autobind-decorator';
+import * as chalk from 'chalk';
 import * as loki from 'lokijs';
+import * as which from "which";
 import Module from '@/module';
 import config from '@/config';
 import serifs from '@/serifs';
@@ -23,6 +26,20 @@ export default class extends Module {
 	@autobind
 	public install() {
 		if (!config.keywordEnabled) return {};
+		try {
+			if (config.mecab) {
+				fs.realpathSync(config.mecab);
+			} else {
+				which.sync("mecab");
+			}
+		} catch (e) {
+			if (e.code === "ENOENT") {
+				this.log(chalk.yellow("MeCab not found! keyword feature will be disabled."));
+				return {};
+			} else {
+				throw e;
+			}
+		}
 
 		this.learnedKeywords = this.ai.getCollection('_keyword_learnedKeywords', {
 			indices: ['userId']
