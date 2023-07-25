@@ -83,7 +83,29 @@ export default class Message {
 			await delay(2000);
 		}
 
+		let visibility, visibleUserIds;
+		switch (this.note.visibility) {
+			case "public":
+				visibility = "public";
+				break;
+			case "home":
+				visibility = "home";
+				break;
+			case "followers":
+				visibility = "specified"; // フォローされているとは限らないため、ダイレクト投稿に
+				visibleUserIds = [this.note.userId];
+				break;
+			case "specified":
+				visibility = "specified";
+				visibleUserIds = [this.note.userId];
+				break;
+			default:
+				break;
+		}
+
 		return await this.ai.post({
+			visibility: visibility,
+			visibleUserIds: visibleUserIds,
 			replyId: this.note.id,
 			text: text,
 			fileIds: opts?.file ? [opts?.file.id] : undefined,
