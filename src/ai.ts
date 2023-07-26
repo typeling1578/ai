@@ -71,6 +71,8 @@ export default class 藍 {
 	public friends: loki.Collection<FriendDoc>;
 	public moduleData: loki.Collection<any>;
 
+	private seenNotesId: String[] = [];
+
 	/**
 	 * 藍インスタンスを生成します
 	 * @param account 藍として使うアカウント
@@ -209,6 +211,12 @@ export default class 藍 {
 	 */
 	@autobind
 	private async onReceiveMessage(msg: Message): Promise<void> {
+		if (this.seenNotesId.includes(msg.id)) return;
+		this.seenNotesId.push(msg.id);
+		setTimeout(() => {
+			this.seenNotesId = this.seenNotesId.filter(noteId => noteId !== msg.id);
+		}, 10000);
+
 		this.log(chalk.gray(`<<< An message received: ${chalk.underline(msg.id)}`));
 
 		// Ignore message if the user is a bot
