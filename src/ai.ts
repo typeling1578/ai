@@ -164,6 +164,7 @@ export default class 藍 {
 		mainStream.on('renote', async data => {
 			if (data.userId == this.account.id) return; // 自分は弾く
 			if (data.text == null && (data.files || []).length == 0) return;
+			if (data.replyId) return;
 
 			// リアクションする
 			this.api('notes/reactions/create', {
