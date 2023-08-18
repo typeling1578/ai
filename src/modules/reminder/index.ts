@@ -154,6 +154,10 @@ export default class extends Module {
 				this.reminds.remove(remind);
 				return;
 			}
+			// タイマーセット
+			this.setTimeoutWithPersistence(NOTIFY_INTERVAL, {
+				id: remind.id,
+			});
 			return;
 		}
 
