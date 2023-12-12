@@ -19,13 +19,11 @@ export default class extends Module {
 				userId: msg.userId
 			});
 			if (!user.isFollowing) {
-				if (msg.friend.love >= 0.1) {
-					this.ai.api('following/create', {
-						userId: msg.userId,
-					});
-				}
+				this.ai.api('following/create', {
+					userId: msg.userId,
+				});
 				return {
-					reaction: msg.friend.love >= 0.1 ? 'like' : null
+					reaction: msg.friend.love >= 0 ? 'like' : null
 				};
 			} else {
 				return {
