@@ -1,12 +1,12 @@
 import * as fs from 'fs';
-import autobind from 'autobind-decorator';
+import { bindThis } from '@/decorators.js';
 import * as chalk from 'chalk';
-import * as loki from 'lokijs';
+import loki from 'lokijs';
 import * as which from "which";
-import Module from '@/module';
-import config from '@/config';
-import serifs from '@/serifs';
-import { mecab } from './mecab';
+import Module from '@/module.js';
+import config from '@/config.js';
+import serifs from '@/serifs.js';
+import { mecab } from './mecab.js';
 
 function kanaToHira(str: string) {
 	return str.replace(/[\u30a1-\u30f6]/g, match => {
@@ -23,7 +23,7 @@ export default class extends Module {
 		learnedAt: number;
 	}>;
 
-	@autobind
+	@bindThis
 	public install() {
 		if (!config.keywordEnabled) return {};
 		try {
@@ -50,7 +50,7 @@ export default class extends Module {
 		return {};
 	}
 
-	@autobind
+	@bindThis
 	private async learn() {
 		const tl = await this.ai.api('notes/local-timeline', {
 			limit: 30
