@@ -3,7 +3,6 @@
 import * as fs from 'fs';
 import { bindThis } from '@/decorators.js';
 import loki from 'lokijs';
-import { FormData } from "formdata-node";
 import got from 'got';
 import chalk from 'chalk';
 import { v4 as uuid } from 'uuid';
@@ -354,14 +353,16 @@ export default class 藍 {
 	 */
 	@bindThis
 	public async upload(file: Buffer | fs.ReadStream, meta: any) {
-		const form = new FormData();
-		form.append("i", config.i);
-		form.append("file[value]", new Blob([file]));
-		form.append("file[options]", meta);
-
 		const res = await got.post({
 			url: `${config.apiUrl}/drive/files/create`,
-			body: form
+			formData: {
+				i: config.i,
+				file: {
+					value: file,
+					options: meta
+				}
+			},
+			json: true
 		}).json();
 		return res;
 	}
