@@ -25,7 +25,7 @@ export default class extends Module {
 					});
 				}
 				return {
-					reaction: msg.friend.love >= 0.1 ? 'like' : null
+					reaction: msg.friend.love >= 1 ? 'like' : null
 				};
 			} else {
 				return {
